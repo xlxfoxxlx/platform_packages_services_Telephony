@@ -23,4 +23,9 @@
     <!-- Mobile network settings screen, setting summary text when check box is clear -->
     <string name="national_roaming_disable">Do not connect to data services when nationally roaming</string>
 
+    <!-- Blacklist preferences -->
+    <string name="blacklist_title">Blocked caller list</string>
+    <string name="blacklist_summary_disabled">Disabled</string>
+    <string name="blacklist_summary">You will not receive incoming calls or messages from phone numbers on the blocked caller list</string>
+
 </resources>
