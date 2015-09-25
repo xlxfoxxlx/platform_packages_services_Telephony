@@ -21,4 +21,8 @@
     <string name="blacklist_summary_disabled">Disabled</string>
     <string name="blacklist_summary">You will not receive incoming calls or messages from phone numbers on the blocked caller list</string>
 
+    <string-array name="dialer_default_classes" translatable="false">
+        <item>com.android.dialer/com.android.dialer.DialtactsActivity</item>
+        <item>com.google.android.dialer/com.google.android.dialer.extensions.GoogleDialtactsActivity</item>
+    </string-array>
 </resources>
