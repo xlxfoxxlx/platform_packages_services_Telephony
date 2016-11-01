@@ -35,6 +35,7 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract.PhoneLookup;
+import android.provider.Settings;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
@@ -247,9 +248,14 @@ public class NotificationMgr {
                 return;
             }
 
-            int resId = android.R.drawable.stat_notify_voicemail;
-            if (mTelephonyManager.getPhoneCount() > 1) {
+            int resId;
+            if (Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.KEY_VOICEMAIL_BREATH, 0) == 1) {
+                resId = R.drawable.stat_notify_voicemail_breath;
+            } else if (mTelephonyManager.getPhoneCount() > 1) {
                 resId = mwiIcon[phoneId];
+            } else {
+                resId = android.R.drawable.stat_notify_voicemail;
             }
 
             // This Notification can get a lot fancier once we have more
@@ -337,8 +343,7 @@ public class NotificationMgr {
                     .setContentIntent(pendingIntent)
                     .setSound(ringtoneUri)
                     .setColor(res.getColor(R.color.dialer_theme_color))
-                    .setOngoing(carrierConfig.getBoolean(
-                            CarrierConfigManager.KEY_VOICEMAIL_NOTIFICATION_PERSISTENT_BOOL));
+                    .setOngoing(false);
 
             if (VoicemailNotificationSettingsUtil.isVibrationEnabled(phone)) {
                 builder.setDefaults(Notification.DEFAULT_VIBRATE);
