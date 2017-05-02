@@ -40,6 +40,7 @@ import android.telephony.PhoneNumberUtils;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Pair;
 
 import com.android.ims.ImsCall;
@@ -129,8 +130,8 @@ abstract class TelephonyConnection extends Connection
                          (com.android.internal.telephony.Connection) ar.result;
                     if (mOriginalConnection != null) {
                         if (connection != null &&
-                            ((connection.getAddress() != null &&
-                            mOriginalConnection.getAddress() != null &&
+                            ((!TextUtils.isEmpty(mOriginalConnection.getAddress()) &&
+                            !TextUtils.isEmpty(connection.getAddress()) &&
                             mOriginalConnection.getAddress().contains(connection.getAddress())) ||
                             connection.getState() == mOriginalConnection.getStateBeforeHandover())) {
                             Log.d(TelephonyConnection.this,
@@ -665,7 +666,7 @@ abstract class TelephonyConnection extends Connection
     };
 
     protected com.android.internal.telephony.Connection mOriginalConnection;
-    private Call.State mConnectionState = Call.State.IDLE;
+    protected Call.State mConnectionState = Call.State.IDLE;
     private Bundle mOriginalConnectionExtras = new Bundle();
     private boolean mIsStateOverridden = false;
     private Call.State mOriginalConnectionState = Call.State.IDLE;
@@ -1273,6 +1274,12 @@ abstract class TelephonyConnection extends Connection
                 b != null && b.getBoolean(CarrierConfigManager.KEY_WIFI_CALLS_CAN_BE_HD_AUDIO);
         boolean canVideoCallsBeHdAudio =
                 b != null && b.getBoolean(CarrierConfigManager.KEY_VIDEO_CALLS_CAN_BE_HD_AUDIO);
+        boolean shouldDisplayHdAudio =
+                b != null && b.getBoolean(CarrierConfigManager.KEY_DISPLAY_HD_AUDIO_PROPERTY_BOOL);
+
+        if (!shouldDisplayHdAudio) {
+            return false;
+        }
 
         if (isVideoCall && !canVideoCallsBeHdAudio) {
             return false;
